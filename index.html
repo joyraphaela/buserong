@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Ulang Tahun, Mama!</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Inter:wght@400;700&family=Poppins:wght@700;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Tailwind CSS (for utility classes) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+
+        :root {
+            --bg-dark: #0a0a1a;
+            --bg-mid: #1a1a2e;
+            --bg-light: #2a2a4a;
+            --accent-pink: #e94560;
+            --accent-cyan: #53ddf0;
+            --accent-gold: #f0db53;
+            --text-light: #e0e0e0;
+            --text-dark: #a4a4a4;
+            --glow-pink: rgba(233, 69, 96, 0.7);
+            --glow-cyan: rgba(83, 221, 240, 0.5);
+            --border-color: rgba(255, 255, 255, 0.15);
+            --glass-bg: rgba(26, 26, 46, 0.6); /* For glassmorphism */
+        }
+
+        /* Base Styles */
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            background: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Add a subtle background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%231a1a2e' fill-opacity='0.4' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
+            z-index: -1;
+        }
+
+        /* Animated Header with Interactive Constellations */
+        .animated-header {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            flex-direction: column;
+            background: radial-gradient(ellipse at bottom, var(--bg-mid) 0%, var(--bg-dark) 100%);
+            overflow: hidden;
+        }
+
+        #constellation-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .header-content {
+            z-index: 2;
+            position: relative;
+            animation: fadeIn 2s 0.5s ease-out backwards;
+            padding: 0 1rem;
+        }
+
+        .header-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 900;
+            font-size: clamp(2.5rem, 10vw, 6rem);
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--glow-pink), 0 0 25px var(--glow-pink), 0 0 50px var(--glow-pink), 0 0 10px var(--glow-cyan);
+            animation: pulse 4s infinite, text-glow 3s infinite alternate;
+        }
+
+        .header-subtitle {
+            font-family: 'Fira Code', monospace;
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            color: var(--accent-cyan);
+            margin-top: 1rem;
+            text-shadow: 0 0 10px var(--glow-cyan);
+        }
+        
+        .scroll-down-indicator {
+            position: absolute;
+            bottom: 30px;
+            z-index: 3;
+            color: white;
+            font-size: 2.5rem;
+            animation: bounce 2.5s infinite;
+            opacity: 0.7;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .scroll-down-indicator:hover {
+            opacity: 1;
+            transform: translateY(5px);
+        }
+
+        /* Main Content & Section Styling */
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 120px 0;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-family: 'Fira Code', monospace;
+            font-size: clamp(2rem, 6vw, 2.8rem);
+            color: var(--accent-cyan);
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+            text-shadow: 0 0 15px var(--glow-cyan);
+        }
+        
+        .section-title::after {
+            content: '_';
+            animation: blink 1s step-end infinite;
+            color: var(--accent-pink);
+        }
+
+        /* Glassmorphism Card Style */
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .glass-card:hover {
+            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+            transform: translateY(-5px);
+        }
+
+        /* Surat (README Style) */
+        .readme-container {
+            padding: 40px;
+        }
+        .readme-container::before, .readme-container::after {
+            content: '';
+            position: absolute;
+            background: var(--accent-pink);
+            opacity: 0.1;
+            border-radius: 50%;
+            filter: blur(40px);
+            z-index: -1;
+        }
+        .readme-container::before {
+            width: 200px;
+            height: 200px;
+            top: -70px;
+            left: -70px;
+            animation: float1 8s infinite ease-in-out;
+        }
+        .readme-container::after {
+            width: 150px;
+            height: 150px;
+            bottom: -60px;
+            right: -60px;
+            background: var(--accent-cyan);
+            animation: float2 10s infinite ease-in-out reverse;
+        }
+
+        .readme-container h1 {
+            font-family: 'Fira Code', monospace;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+            color: var(--accent-pink);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .readme-container p {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            line-height: 1.8;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+        
+        .bible-verse {
+            font-family: 'Inter', sans-serif;
+            font-style: italic;
+            font-size: 1rem;
+            color: var(--accent-gold);
+            margin-top: 30px;
+            padding-left: 20px;
+            border-left: 3px solid var(--accent-gold);
+            text-shadow: 0 0 8px rgba(240, 219, 83, 0.5);
+        }
+        
+        .bible-verse-ref {
+            display: block;
+            margin-top: 5px;
+            font-weight: bold;
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Skill Tree (Timeline Replacement) */
+        .skill-tree {
+            position: relative;
+            padding: 20px 0;
+        }
+        .skill-tree::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent-cyan), var(--accent-pink));
+            transform: translateX(-50%);
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--glow-cyan);
+        }
+        .skill-node {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            margin-bottom: 30px;
+            /* Staggered animation */
+            opacity: 0;
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .section.visible .skill-node {
+            opacity: 1;
+            transform: none;
+        }
+        .section.visible .skill-node:nth-child(odd) { transform: translateX(-20px); }
+        .section.visible .skill-node:nth-child(even) { transform: translateX(20px); }
+
+        .skill-node:nth-child(odd) { left: 0; }
+        .skill-node:nth-child(even) { left: 50%; }
+
+        .skill-node::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 4px;
+            background: var(--accent-cyan);
+            top: 40px;
+        }
+        .skill-node:nth-child(odd)::after { right: -25px; }
+        .skill-node:nth-child(even)::after { left: -25px; }
+
+        .skill-content {
+            padding: 25px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .skill-content:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 0 25px var(--glow-pink);
+        }
+        .skill-icon {
+            position: absolute;
+            top: 25px;
+            width: 35px;
+            height: 35px;
+            background: var(--bg-dark);
+            border: 4px solid var(--accent-pink);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--accent-pink);
+            font-size: 1.2rem;
+            z-index: 10;
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), color 0.3s ease;
+        }
+        .skill-node:hover .skill-icon {
+            transform: scale(1.2) rotate(360deg);
+            color: var(--accent-cyan);
+        }
+        .skill-node:nth-child(odd) .skill-icon { right: -60px; }
+        .skill-node:nth-child(even) .skill-icon { left: -60px; }
+
+        .skill-content h3 {
+            font-family: 'Fira Code', monospace;
+            color: var(--accent-cyan);
+            margin-bottom: 10px;
+        }
+        .skill-content p {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .skill-content .bible-verse {
+            font-size: 0.85rem;
+            margin-top: 15px;
+            padding-left: 15px;
+        }
+
+        /* Galeri Foto (Commit History) */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        .photo-card {
+            background: var(--bg-mid);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .photo-card:hover {
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+        .photo-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+            transition: filter 0.4s ease, transform 0.4s ease;
+        }
+        .photo-card:hover img {
+            filter: brightness(1.1);
+            transform: scale(1.1);
+        }
+        .commit-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(10, 10, 26, 1) 20%, rgba(10, 10, 26, 0));
+            padding: 40px 15px 15px 15px;
+            color: white;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            transform: translateY(100%);
+            transition: transform 0.4s ease-in-out;
+        }
+        .photo-card:hover .commit-overlay {
+            transform: translateY(0);
+        }
+
+        /* Kue Ultah & Confetti */
+        .cake-container { text-align: center; }
+        .cake-wrapper { 
+            position: relative; 
+            width: 250px; 
+            height: 250px; 
+            margin: 40px auto; 
+            cursor: pointer; 
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+        .cake-wrapper:hover {
+            transform: rotateY(10deg) rotateX(5deg) scale(1.05);
+        }
+        .cake-wrapper .flame { 
+            position: absolute; 
+            width: 15px; 
+            height: 35px; 
+            background: orange; 
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; 
+            animation: flicker 1s ease-in-out infinite alternate; 
+            transform-origin: bottom; 
+            transition: opacity 0.5s ease, transform 0.5s ease; 
+            box-shadow: 0 0 10px #ffc107, 0 0 20px #ff9800; 
+            top: 65px; left: 118px; 
+        }
+        .cake-wrapper .candle { 
+            position: absolute; 
+            width: 10px; 
+            height: 50px; 
+            background: #fff; 
+            border-radius: 5px 5px 0 0; 
+            top: 90px; 
+            left: 120px; 
+        }
+        .cake-wrapper .cake-base { 
+            position: absolute; 
+            bottom: 20px; 
+            width: 100%; 
+            height: 100px; 
+            background: #d18e57; 
+            border-radius: 50%; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3); 
+        }
+        .cake-wrapper .icing { 
+            position: absolute; 
+            bottom: 100px; 
+            width: 100%; 
+            height: 40px; 
+            background: var(--accent-pink); 
+            border-radius: 50%; 
+        }
+        .cake-message { 
+            margin-top: 30px; 
+            font-family: 'Fira Code', monospace; 
+            color: var(--accent-cyan); 
+            font-size: 1.2rem; 
+            height: 2rem; 
+            transition: all 0.5s ease; 
+        }
+        .confetti-container { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            pointer-events: none; 
+            z-index: 9999; 
+            overflow: hidden;
+        }
+        .confetti { 
+            position: absolute; 
+            width: 10px; 
+            height: 20px; 
+            opacity: 0; 
+            animation: fall 5s ease-out forwards; 
+            background-color: var(--accent-pink);
+        }
+        
+        /* Terminal Section */
+        .terminal-container {
+            padding: 25px;
+            font-family: 'Fira Code', monospace;
+        }
+        .terminal-container p { font-size: 0.9rem; margin-bottom: 20px; color: var(--text-dark); }
+        .terminal-output {
+            height: 150px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+            background-color: rgba(0,0,0,0.2);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .terminal-output .success { color: var(--accent-cyan); }
+        .terminal-output .error { color: var(--accent-pink); }
+        .terminal-line { display: flex; align-items: center; }
+        .terminal-prompt { color: var(--accent-cyan); margin-right: 8px; }
+        .terminal-input {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            font-family: 'Fira Code', monospace;
+            flex-grow: 1;
+            outline: none;
+        }
+        .terminal-input:focus + .cursor { animation: blink 1s step-end infinite; }
+        .cursor { color: var(--text-light); visibility: hidden; }
+        kbd {
+            background-color: #333;
+            border-radius: 3px;
+            border: 1px solid #555;
+            padding: 2px 4px;
+            font-size: 0.8em;
+            box-shadow: 1px 1px 1px #000;
+        }
+
+        /* Hadiah Terakhir */
+        .final-gift { text-align: center; }
+        .gift-button { 
+            font-family: 'Fira Code', monospace; 
+            background: linear-gradient(45deg, var(--accent-pink), #c34a9d); 
+            color: white; 
+            padding: 18px 36px; 
+            border-radius: 50px; 
+            border: none; 
+            cursor: pointer; 
+            font-size: 1.2rem; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            box-shadow: 0 0 25px var(--glow-pink); 
+            position: relative;
+            overflow: hidden;
+        }
+        .gift-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, rgba(255,255,255,0) 20%, rgba(255,255,255,0.3), rgba(255,255,255,0) 80%);
+            transform: skewX(-30deg);
+            transition: left 1s ease;
+        }
+        .gift-button:hover::before {
+            left: 100%;
+        }
+        .gift-button:hover { 
+            transform: scale(1.05) translateY(-2px); 
+            box-shadow: 0 0 40px var(--glow-pink); 
+        }
+        .gift-message-box { 
+            margin-top: 40px; 
+            padding: 40px; 
+            display: none; 
+        }
+        .gift-message-box::before {
+            content: '\f06b'; /* Font Awesome gift icon */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 6rem;
+            color: rgba(240, 219, 83, 0.1);
+            z-index: 0;
+            transform: rotate(-20deg);
+        }
+        .gift-message-box p {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+            color: var(--accent-cyan);
+            position: relative;
+            z-index: 1;
+        }
+        .gift-message-box .bible-verse { 
+            font-size: clamp(0.9rem, 3vw, 1.1rem); 
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Modal Styling */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: var(--glass-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+            text-align: center;
+            max-width: 90vw;
+            max-height: 90vh;
+            width: 500px;
+            position: relative;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            overflow-y: auto;
+        }
+        .modal-overlay.visible .modal-content {
+            transform: scale(1) translateY(0);
+        }
+        .modal-close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: color 0.3s, transform 0.3s;
+        }
+        .modal-close-button:hover {
+            color: var(--accent-pink);
+            transform: rotate(90deg);
+        }
+        .modal-content h3 {
+            font-family: 'Fira Code', monospace;
+            color: var(--accent-pink);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        .modal-content p {
+            color: var(--text-light);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        /* Keyframe Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+        @keyframes text-glow {
+            from { text-shadow: 0 0 10px var(--glow-pink), 0 0 20px var(--glow-pink), 0 0 30px var(--glow-cyan); }
+            to { text-shadow: 0 0 20px var(--glow-pink), 0 0 30px var(--glow-cyan), 0 0 40px var(--glow-cyan); }
+        }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-20px); } 60% { transform: translateY(-10px); } }
+        @keyframes blink { 50% { opacity: 0; } }
+        @keyframes flicker { 0%, 100% { transform: scaleY(1); opacity: 1; } 50% { transform: scaleY(0.95) scaleX(1.05); opacity: 0.9; } }
+        @keyframes fall { 0% { transform: translateY(-10vh) rotateZ(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotateZ(720deg); opacity: 0; } }
+        @keyframes float1 { 0%, 100% { transform: translateY(0px) translateX(0px); } 50% { transform: translateY(-20px) translateX(20px); } }
+        @keyframes float2 { 0%, 100% { transform: translateY(0px) translateX(0px); } 50% { transform: translateY(20px) translateX(-20px); } }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .skill-tree::before { left: 20px; }
+            .skill-node, .skill-node:nth-child(even) { 
+                width: 100%; 
+                left: 0; 
+                padding-left: 70px; 
+                padding-right: 10px; 
+            }
+            .section.visible .skill-node:nth-child(odd),
+            .section.visible .skill-node:nth-child(even) {
+                transform: translateX(0);
+            }
+            .skill-node::after, .skill-node:nth-child(even)::after { left: 20px; }
+            .skill-icon, .skill-node:nth-child(odd) .skill-icon, .skill-node:nth-child(even) .skill-icon { left: 5px; }
+            
+            .glass-card, .readme-container, .gift-message-box { padding: 25px; }
+        }
+
+        @media (max-width: 480px) {
+            .photo-grid { grid-template-columns: 1fr; }
+            .section { padding: 80px 0; }
+            .section-title { margin-bottom: 40px; }
+            .modal-content { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Header -->
+    <header class="animated-header">
+        <canvas id="constellation-canvas"></canvas>
+        <div class="header-content">
+            <h1 class="header-title">Happiest Bday, Mama</h1>
+            <p class="header-subtitle">//from JoyRaph.</p>
+        </div>
+        <a href="#surat" class="scroll-down-indicator">
+            <i class="fa-solid fa-chevron-down"></i>
+        </a>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Surat Ucapan (README.md Style) -->
+        <section id="surat" class="section">
+            <h2 class="section-title">A little smth for u</h2>
+            <div class="readme-container glass-card">
+                <h1># Project: Kehidupan.md</h1>
+                <p id="letter-text">
+                      Ma,<br><br>
+                    thanku for all the love, for all the laughs, for all the companions through thick and thins. Thanku for being an amazing human being, amazing daughter, friend, sister and amazing mom. Makasih sudah selalu berusaha ada untuk Joan, Eren, Raffa. For giving us the amazing life we has. I'm so grateful to have u as my mom, and I’d choose to be ur daughter in another lifetime every single time. .<br><br>
+                    With Love,<br>
+                    Raffa
+                </p>
+            </div>
+        </section>
+
+        <!-- Skill Tree Kehidupan -->
+        <section id="skill-tree" class="section">
+            <h2 class="section-title">Module Log</h2>
+            <div class="skill-tree">
+                <div class="skill-node" style="transition-delay: 0.1s;">
+                    <div class="skill-content">
+                        <h3>Oct 16, 1984: Waning Gibbous Moon</h3>
+                        <p>Even as the Moon let go of its fullness on your birthday, your light has only grown—gentle, steady, and always present for those you love.</p>
+                    </div>
+                    <div class="skill-icon"><i class="fa-solid fa-moon"></i></div>
+                </div>
+                <div class="skill-node" style="transition-delay: 0.2s;">
+                    <div class="skill-content">
+                        <h3>Oct 16, 1984: Mercury at Dichotomy</h3>
+                        <p>They say Mercury’s dichotomy reveals both sides clearly. On your birthday, it reflected the gift you’ve always had: helping us see what truly matters.</p>
+                    </div>
+                    <div class="skill-icon"><i class="fa-solid fa-star"></i></div>
+                </div>
+                <div class="skill-node" style="transition-delay: 0.3s;">
+                    <div class="skill-content">
+                        <h3>Jul 29, 2002: Embracing Motherhood</h3>
+                        <p>On this date, your most significant role began. You built our lives with unwavering strength and dignity, becoming the resilient foundation of our family.</p>
+                    </div>
+                    <div class="skill-icon"><i class="fa-solid fa-baby-carriage"></i></div>
+                </div>
+                <div class="skill-node" style="transition-delay: 0.4s;">
+                    <div class="skill-content">
+                        <h3>Master of All Trades</h3>
+                        <p>It's truly inspiring to see your diverse skills and how effortlessly you master every challenge. So proud of everything you do.</p>
+                        <div class="bible-verse">"She is clothed with strength and dignity; she can laugh at the days to come."<span class="bible-verse-ref">// Proverbs 31:25</span></div>
+                    </div>
+                    <div class="skill-icon"><i class="fa-solid fa-code"></i></div>
+                </div>
+                 <div class="skill-node" style="transition-delay: 0.5s;">
+                    <div class="skill-content">
+                        <h3>Today's Patch: Birthday!</h3>
+                        <div class="bible-verse">"The Lord bless you and keep you; the Lord make his face shine on you and be gracious to you; the Lord turn his face toward you and give you peace."<span class="bible-verse-ref">// Numbers 6:24-26</span></div>
+                    </div>
+                    <div class="skill-icon"><i class="fa-solid fa-cake-candles"></i></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Galeri Foto (Commit History) -->
+        <section id="galeri" class="section">
+            <h2 class="section-title">Galeri Kenangan</h2>
+            <div class="photo-grid">
+                <!-- Card 1 -->
+                <div class="photo-card" data-full-src="D:\.bermain\images\mamamini.png" data-caption-title="commit a1b2c3d4" data-caption-text="start: Accessing 'Mama' module – previous birthday event found">
+                    <img src="D:\.bermain\images\mamamini.png" alt="Mama Kecil" onerror="this.onerror=null;this.src='https://placehold.co/400x560/e94560/ffffff?text=Image+Error';">
+                    <div class="commit-overlay">
+                        <span style="color: var(--accent-cyan);">commit a1b2c3d4</span><br>
+                        start: Accessing 'Mama' module – previous birthday event found
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="photo-card" data-full-src="D:\.bermain\images\mamalulus.png" data-caption-title="commit c3d4e5f6" data-caption-text="feat: Deployed 'knowledge' package v1.0.">
+                    <img src="D:\.bermain\images\mamalulus.png" alt="Mama Lulus" onerror="this.onerror=null;this.src='https://placehold.co/400x560/53ddf0/1a1a2e?text=Image+Error';">
+                    <div class="commit-overlay">
+                        <span style="color: var(--accent-cyan);">commit c3d4e5f6</span><br>
+                        feat: Deployed 'knowledge' package v1.0.
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="photo-card" data-full-src="D:\.bermain\images\mamafemili.png" data-caption-title="commit b2c3d4e5" data-caption-text="refactor: Integrated into 'family' module.">
+                    <img src="D:\.bermain\images\mamafemili.png" alt="Mama dan Keluarga" onerror="this.onerror=null;this.src='https://placehold.co/400x560/f0db53/1a1a2e?text=Image+Error';">
+                    <div class="commit-overlay">
+                        <span style="color: var(--accent-cyan);">commit b2c3d4e5</span><br>
+                        refactor: Integrated into 'family' module.
+                    </div>
+                </div>
+                <!-- Card 4 -->
+                <div class="photo-card" data-full-src="D:\.bermain\images\mamajoen.png" data-caption-title="commit d4e5f6g7" data-caption-text="merge: Welcomed first-born 'eon.v2.0' into main">
+                    <img src="D:\.bermain\images\mamajoen.png" alt="Mama dan Kak Joen" onerror="this.onerror=null;this.src='https://placehold.co/400x560/c34a9d/ffffff?text=Image+Error';">
+                    <div class="commit-overlay">
+                        <span style="color: var(--accent-cyan);">commit d4e5f6g7</span><br>
+                        merge: Welcomed first-born 'eon.v2.0' into main
+                    </div>
+                </div>
+                <!-- Card 5 -->
+                <div class="photo-card" data-full-src="D:\.bermain\images\mamarafa.png" data-caption-title="commit e5f6g7h8" data-caption-text="feat: Launched 'joy' instance. Happiness increased by 20%.">
+                    <img src="D:\.bermain\images\mamarafa.png" alt="Mama dan Joy" onerror="this.onerror=null;this.src='https://placehold.co/400x560/98c379/1a1a2e?text=Image+Error';">
+                    <div class="commit-overlay">
+                        <span style="color: var(--accent-cyan);">commit e5f6g7h8</span><br>
+                        feat: Launched 'joy' instance. Happiness increased by 20%.
+                    </div>
+                </div>
+                <!-- Card 6 -->
+                <div class="photo-card" data-full-src="D:\.bermain\images\mamaeren.png" data-caption-title="commit f6g7h8i9" data-caption-text="feat: Launched 'eren' instance. Core team expanded.">
+                    <img src="D:\.bermain\images\mamaeren.png" alt="Mama dan Adik Eren" onerror="this.onerror=null;this.src='https://placehold.co/400x560/e06c75/ffffff?text=Image+Error';">
+                    <div class="commit-overlay">
+                        <span style="color: var(--accent-cyan);">commit f6g7h8i9</span><br>
+                        feat: Launched 'eren' instance. Core team expanded.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kue Ulang Tahun Interaktif -->
+        <section id="kue" class="section">
+            <h2 class="section-title">Make a wish!</h2>
+            <div class="cake-container">
+                <p class="cake-message" id="cake-message">Klik lilinnyaaa</p>
+                <div class="cake-wrapper" id="cake-wrapper">
+                    <div class="flame" id="flame"></div>
+                    <div class="candle"></div>
+                    <div class="icing"></div>
+                    <div class="cake-base"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Terminal Interaktif -->
+        <section id="terminal" class="section">
+            <h2 class="section-title">Terminal ???</h2>
+            <div class="terminal-container glass-card">
+                <p>Write <kbd>help</kbd> for command list</p>
+                <div class="terminal-output" id="terminal-output">
+                    <div><span class="terminal-prompt">Mama@Home:~ $</span> welcome eskom paling cantik</div>
+                </div>
+                <div class="terminal-line">
+                    <span class="terminal-prompt">Mama@Home:~ $</span>
+                    <input type="text" class="terminal-input" id="terminal-input">
+                    <span class="cursor">_</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hadiah Terakhir -->
+        <section id="gift" class="section final-gift">
+            <h2 class="section-title">Final Gift</h2>
+            <button id="gift-button" class="gift-button">Klik klik klik</button>
+            <div id="gift-message-box" class="gift-message-box glass-card">
+                <p>
+                    You desserve aaalllll the happiness in the world
+                </p>
+                <div class="bible-verse">
+                    "Segala sesuatu dijadikan-Nya indah pada waktunya, bahkan dunia kekekalan ditaruh-Nya dalam hati mereka."
+                    <span class="bible-verse-ref">// Pengkhotbah 3:11a</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal for Photo Gallery -->
+    <div id="photo-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-button">&times;</button>
+            <img id="modal-image" src="" alt="Full size image" class="w-full h-auto rounded-lg mb-4 max-h-[60vh]">
+            <h3 id="modal-caption-title"></h3>
+            <p id="modal-caption-text"></p>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- Interactive Constellation Animation ---
+        const canvas = document.getElementById('constellation-canvas');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        const numStars = window.innerWidth > 768 ? 150 : 70;
+        const connectDistance = 100;
+
+        let mouse = {
+            x: undefined,
+            y: undefined,
+            radius: 150
+        };
+
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+        window.addEventListener('mouseout', () => {
+            mouse.x = undefined;
+            mouse.y = undefined;
+        });
+
+        function setCanvasSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initStars();
+        }
+        window.addEventListener('resize', setCanvasSize);
+
+        class Star {
+            constructor(x, y, size, speedX, speedY) {
+                this.x = x || Math.random() * canvas.width;
+                this.y = y || Math.random() * canvas.height;
+                this.size = size || Math.random() * 2 + 1;
+                this.speedX = speedX || (Math.random() * 0.4 - 0.2);
+                this.speedY = speedY || (Math.random() * 0.4 - 0.2);
+                this.color = 'rgba(255, 255, 255, 0.8)';
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+                if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+                this.x += this.speedX;
+                this.y += this.speedY;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initStars() {
+            stars = [];
+            for (let i = 0; i < numStars; i++) {
+                stars.push(new Star());
+            }
+        }
+
+        function connectStars() {
+            let opacityValue = 1;
+            for (let a = 0; a < stars.length; a++) {
+                for (let b = a; b < stars.length; b++) {
+                    let dx = stars[a].x - stars[b].x;
+                    let dy = stars[a].y - stars[b].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < connectDistance) {
+                        opacityValue = 1 - (distance / connectDistance);
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${opacityValue})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(stars[a].x, stars[a].y);
+                        ctx.lineTo(stars[b].x, stars[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            if (mouse.x !== undefined && mouse.y !== undefined) {
+                 for (let i = 0; i < stars.length; i++) {
+                    let dx = stars[i].x - mouse.x;
+                    let dy = stars[i].y - mouse.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        opacityValue = 1 - (distance / mouse.radius);
+                        ctx.strokeStyle = `rgba(83, 221, 240, ${opacityValue})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(stars[i].x, stars[i].y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.stroke();
+                    }
+                 }
+            }
+        }
+
+        function animateConstellation() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (const star of stars) {
+                star.update();
+                star.draw();
+            }
+            connectStars();
+            requestAnimationFrame(animateConstellation);
+        }
+        
+        setCanvasSize();
+        animateConstellation();
+
+        // --- Typing Animation Function ---
+        function typeWriter(element, text, speed, onComplete) {
+            let i = 0;
+            element.innerHTML = "";
+            function type() {
+                if (i < text.length) {
+                    let char = text.charAt(i);
+                    if (char === '<') { // Handle HTML tags
+                        let tagEnd = text.indexOf('>', i);
+                        element.innerHTML += text.substring(i, tagEnd + 1);
+                        i = tagEnd;
+                    } else {
+                        element.innerHTML += char;
+                    }
+                    i++;
+                    setTimeout(type, speed);
+                } else if (onComplete) {
+                    onComplete();
+                }
+            }
+            type();
+        }
+
+        // --- Section Visibility & Animations ---
+        const letterTextEl = document.getElementById('letter-text');
+        const letterFullText = `Ma,<br><br>thanku for all the love, for all the laughs, for all the companions through thick and thins. Thanku for being an amazing human being, amazing daughter, friend, sister and amazing mom. Makasih sudah selalu berusaha ada untuk Joan, Eren, Raffa. For giving us the amazing life we has. I'm so grateful to have u as my mom, and I’d choose to be ur daughter in another lifetime every single time. .<br><br>With Love,<br>Raffa`;
+        
+        const terminalOutput = document.getElementById('terminal-output');
+        const welcomeMessage = `<div><span class="terminal-prompt">Mama@Home:~ $</span> welcome eskom pling cantik</div>`;
+
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.2 };
+        const sectionObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Trigger typing animations
+                    if (entry.target.id === 'surat' && letterTextEl.innerHTML === "") {
+                        typeWriter(letterTextEl, letterFullText, 30);
+                    }
+                    if (entry.target.id === 'terminal' && terminalOutput.innerHTML === "") {
+                        typeWriter(terminalOutput, welcomeMessage, 50);
+                    }
+
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.section').forEach(section => sectionObserver.observe(section));
+
+        // --- Interactive Birthday Cake ---
+        const cakeWrapper = document.getElementById('cake-wrapper');
+        const flame = document.getElementById('flame');
+        const cakeMessage = document.getElementById('cake-message');
+        let isFlameOn = true;
+
+        cakeWrapper.addEventListener('click', () => {
+            if (isFlameOn) {
+                flame.style.opacity = '0';
+                flame.style.transform = 'scale(0)';
+                cakeMessage.textContent = 'Pibesdeeyyy🎉';
+                isFlameOn = false;
+                setTimeout(() => {
+                    cakeMessage.textContent = 'smg smw wish terkbul oK ✨';
+                    createConfetti();
+                }, 1500);
+            } else {
+                cakeMessage.textContent = 'sdh diklik coy, lanjut scroll';
+            }
+        });
+
+        function createConfetti() {
+            const confettiContainer = document.createElement('div');
+            confettiContainer.classList.add('confetti-container');
+            document.body.appendChild(confettiContainer);
+            const colors = ['#e94560', '#53ddf0', '#f0db53', '#ffffff', '#c34a9d'];
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                confettiContainer.appendChild(confetti);
+            }
+            setTimeout(() => confettiContainer.remove(), 6000);
+        }
+
+        // --- Photo Gallery Modal ---
+        const photoCards = document.querySelectorAll('.photo-card');
+        const photoModal = document.getElementById('photo-modal');
+        const modalImage = document.getElementById('modal-image');
+        const modalCaptionTitle = document.getElementById('modal-caption-title');
+        const modalCaptionText = document.getElementById('modal-caption-text');
+        const modalCloseButton = photoModal.querySelector('.modal-close-button');
+
+        photoCards.forEach(card => {
+            card.addEventListener('click', () => {
+                modalImage.src = card.dataset.fullSrc;
+                modalCaptionTitle.textContent = card.dataset.captionTitle;
+                modalCaptionText.textContent = card.dataset.captionText;
+                photoModal.classList.add('visible');
+            });
+        });
+
+        function closeModal() {
+            photoModal.classList.remove('visible');
+        }
+        modalCloseButton.addEventListener('click', closeModal);
+        photoModal.addEventListener('click', (e) => {
+            if (e.target === photoModal) closeModal();
+        });
+
+        // --- Interactive Terminal ---
+        const terminalInput = document.getElementById('terminal-input');
+        
+        terminalInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                const command = terminalInput.value.trim();
+                terminalInput.value = '';
+                executeCommand(command);
+            }
+        });
+
+        function executeCommand(command) {
+            const commandLine = document.createElement('div');
+            commandLine.innerHTML = `<span class="terminal-prompt">Mama@Home:~ $</span> ${command}`;
+            terminalOutput.appendChild(commandLine);
+
+            let response = '';
+            switch (command.toLowerCase()) {
+                case 'help':
+                    response = `<div class="success">Perintah yang tersedia:</div>
+                                <div>- <span style="color:var(--accent-cyan)">'about'</span> : Tentang Sharon.</div>
+                                <div>- <span style="color:var(--accent-cyan)">'skills'</span>: Keahlian Mama.</div>
+                                <div>- <span style="color:var(--accent-cyan)">'love'</span>  : Ada deh.</div>
+                                <div>- <span style="color:var(--accent-cyan)">'clear'</span> : Bersihkan terminal.</div>
+                                <div>- <span style="color:var(--accent-cyan)">'161084'</span>: Sikrittt.</div>`;
+                    break;
+                case 'about':
+                    response = '<span class="success">Nama:</span> Sharon Fleurette Pieter<br><span class="success">Status:</span> The Best Mom Ever<br><span class="success">Versi:</span> 40.0';
+                    break;
+                case 'skills':
+                    response = '<span class="success">Keahlian:</span> Endless Love, Amazing teaching skills,hengker, GOOOOD COOOK, Warmest hugs.';
+                    break;
+                case 'love':
+                    response = '<span class="success">Output:</span> ❤️ Sarangekk, Mama! ❤️';
+                    break;
+                case 'clear':
+                    terminalOutput.innerHTML = '<div><span class="terminal-prompt">Mama@Home:~ $</span> Terminal dibersihkan.</div>';
+                    return;
+                case '161084':
+                    response = '<span class="success">[SUCCESS]</span> kalau sudah selesai, coba inspect trs cek console';
+                    break;
+                default:
+                    response = `<span class="error">Error:</span> Gaada perintah '${command}' coy. Ketik 'help' sj pls la y.`;
+                    break;
+            }
+            
+            const responseLine = document.createElement('div');
+            responseLine.innerHTML = response;
+            terminalOutput.appendChild(responseLine);
+            terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        }
+
+        // --- Final Gift ---
+        const giftButton = document.getElementById('gift-button');
+        const giftMessageBox = document.getElementById('gift-message-box');
+        giftButton.addEventListener('click', () => {
+            giftMessageBox.style.display = 'block';
+            giftButton.style.display = 'none';
+            giftMessageBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        // --- Console Easter Egg ---
+        console.log("%cHalaw ibu eskom 👋", "color: #e94560; font-size: 24px; font-weight: bold; text-shadow: 1px 1px #000;");
+        console.log("%cIni sikrit bingits, kok bs ktmu sie, heker yh 😱 😱", "color: #53ddf0; font-size: 16px;");
+        console.log("%cmaaf br bs ksih ini okk, i love u so much, even all the things ive said here can't express how much i love you,", "color: #53ddf0; font-size: 16px;");
+        console.log("%csorry for all the times the world, or even i had let u down, thanku for still giving out all ur love ya ma.", "color: #53ddf0; font-size: 16px;");
+        console.log("%cHappyBirthday.execute({ from: 'Joy', with: 'Love' });", "font-family: 'Fira Code', monospace; color: #e94560; font-size: 18px; background: #1a1a2e; padding: 5px 10px; border-radius: 5px;");
+    });
+    </script>
+</body>
+</html>
